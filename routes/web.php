@@ -122,9 +122,34 @@ Route::get('/all-food', [AdminsController::class, 'allFood'])->name('admins.all.
 Route::get('/create-food', [AdminsController::class, 'createFood'])->name('admins.create.foods');
 Route::post('/create-food', [AdminsController::class, 'storeFood'])->name('admins.store.foods');
 Route::get('/delete-food/{id}', [AdminsController::class, 'deleteFood'])->name('admins.delete.food');
+Route::get('/foods/{id}/edit', [AdminsController::class, 'edit'])->name('foods.edit');
+Route::put('/foods/{id}', [AdminsController::class, 'update'])->name('foods.update');
+
+//working with category
+Route::get('/all-category', [AdminsController::class, 'allCategory'])->name('admins.all.category');
+Route::get('/create-category', [AdminsController::class, 'createCategory'])->name('admins.create.category');
+Route::post('/create-category', [AdminsController::class, 'storeCategory'])->name('admins.store.category');
+Route::get('/delete-category/{id}', [AdminsController::class, 'deleteCategory'])->name('admins.delete.category');
+Route::get('/categories/{id}/edit', [AdminsController::class, 'editCategory'])->name('categories.edit');
+Route::put('/categories/{id}', [AdminsController::class, 'updateCategory'])->name('categories.update');
+
+
+//working with subcategory
+Route::get('/all-subcategory', [AdminsController::class, 'allSubcategory'])->name('admins.all.subcategory');
+Route::get('/create-subcategory', [AdminsController::class, 'createSubcategory'])->name('admins.create.subcategory');
+Route::post('/create-subcategory', [AdminsController::class, 'storeSubcategory'])->name('admins.store.subcategory');
+Route::get('/delete-subcategory/{id}', [AdminsController::class, 'deleteSubcategory'])->name('admins.delete.subcategory');
+Route::get('/subcategories/{id}/edit', [AdminsController::class, 'editSubcategory'])->name('subcategories.edit');
+Route::put('/subcategories/{id}', [AdminsController::class, 'updateSubcategory'])->name('subcategories.update');
+
+//jquery
+Route::get('/get-subcategories/{category}', [AdminsController::class, 'getSubcategories']);
 
 
 });
+
+
+
 
 
 

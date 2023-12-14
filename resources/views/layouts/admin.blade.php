@@ -41,6 +41,17 @@
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admins.all.bookings') }}" style="margin-left: 20px;">Bookings</a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('admins.all.category') }}" style="margin-left: 20px;">category</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('admins.all.subcategory') }}" style="margin-left: 20px;">subcategory</a>
+          </li>
+
+          
+
         </ul>
         @endauth
         <ul class="navbar-nav ml-md-auto d-md-flex">

@@ -5,19 +5,16 @@ namespace App\Models\Food;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Food extends Model
+class Subcatgory extends Model
 {
     use HasFactory;
 
-    protected $table="foods";
+    protected $table="subcategories";
 
     protected $fillable = [
         'name',
-        'price',
         'category_id',
-        'subcategory_id',
-        'description',
-        'image',
+        
     ];
 
      public $timestamps=true;
@@ -26,12 +23,8 @@ class Food extends Model
      {
          return $this->belongsTo(Category::class);
      }
-
-     public function subcategory()
-     {
-         return $this->belongsTo(Subcatgory::class);
-     }
-
-
-    
+     public function foods()
+    {
+        return $this->hasMany(Food::class);
+    }
 }

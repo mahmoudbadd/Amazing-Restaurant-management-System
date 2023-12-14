@@ -30,6 +30,8 @@
                 <th scope="col">image</th>
                 <th scope="col">price</th>
                 <th scope="col">category</th>
+                <th scope="col">Subcategory</th>
+                <th scope="col">update</th>
                 <th scope="col">delete</th>
               </tr>
             </thead>
@@ -40,7 +42,11 @@
                     <td>{{ $allfood->name }}</td>
                     <td><img height="70" width="70" src="{{ asset('assets/img/'.$allfood->image.'') }}" ></td>
                     <td>${{ $allfood->price }}</td>
-                    <td>{{ $allfood->category }}</td>
+                    <td>{{ $allfood->category->name }}</td>
+                    <td>{{ optional($allfood->subcategory)->name }}</td>
+                    
+                    {{-- <td>{{ $allfood->name??null }}</td> --}}
+                    <td><a href="{{ route('foods.edit',$allfood->id) }}" class="btn btn-success  text-center ">update</a></td>
                      <td><a href="{{ route('admins.delete.food',$allfood->id) }}" class="btn btn-danger  text-center ">delete</a></td>
                   </tr>
                 @endforeach

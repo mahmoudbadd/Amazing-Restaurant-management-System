@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Food\Food;
 use App\Models\Admin\Admin;
+
 use App\Models\Food\Booking;
 use Illuminate\Http\Request;
+use App\Models\Food\Category;
 use App\Models\Food\Checkout;
+
 use App\Http\Controllers\Controller;
+use App\Models\Food\Subcatgory;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
@@ -136,12 +140,16 @@ class AdminsController extends Controller
 
 
     public function allFood(){
+        $foods = Food::with('category','subcategory')->get();
+       
         $food=Food::select()->orderBy('id','desc')->get();
-        return view('admins.allfood',compact('food'));
+        return view('admins.allfood',compact('food','foods'));
     }
 
     public function createFood(){
-        return view('admins.createfood');
+        $categories = Category::all();
+        $subcategories = Subcatgory::all();
+        return view('admins.createfood',compact('categories','subcategories'));
     }
 
 
@@ -150,8 +158,9 @@ class AdminsController extends Controller
         Request()->validate([
             "name"=> "required|max:40",
             "price"=> "required",
-            "descrption"=> "required|max:200",
-            "category"=> "required",
+            "description"=> "required|max:200",
+            "category_id"=> "required",
+            "subcategory_id"=> "required",
             "image"=> "required",
             
         ]);
@@ -162,8 +171,9 @@ class AdminsController extends Controller
         $foods=Food::create([
             "name"=>$request->name,
             "price"=>$request->price,
-            "descrption"=>$request->descrption,
-            "category"=>$request->category,
+            "description"=>$request->description,
+            "category_id"=>$request->category_id,
+            "subcategory_id"=>$request->subcategory_id,
             "image"=>$myimage
             
             
@@ -172,6 +182,39 @@ class AdminsController extends Controller
         if($foods){
          return redirect()->route('admins.all.foods')->with("success","food added  Successfully");
         }
+    }
+
+    public function edit($id){
+        $categories = Category::all();
+        $subcategories = Subcatgory::all();
+        $food = Food::findOrFail($id);
+
+    
+    return view('admins.editfood', compact('food', 'categories','subcategories'));
+    }
+
+    public function update(Request $request ,$id){
+        $food = Food::findOrFail($id);
+
+        $destinationPath = 'assets/img/';
+        $myimage = $request->image->getClientOriginalName();
+        $request->image->move(public_path($destinationPath), $myimage);
+
+
+        $food->update([
+            'name' => $request->input('name'),
+            'price' => $request->input('price'),
+            'category_id' => $request->input('category_id'),
+            'subcategory_id' => $request->input('subcategory_id'),
+            'description' => $request->input('description'),
+            "image"=>$myimage
+           
+        ]);
+
+        
+        $food->save();
+
+        return redirect()->route('admins.all.foods');
     }
 
     public function deleteFood($id){
@@ -188,5 +231,125 @@ class AdminsController extends Controller
            }
     }
 
+    public function allcategory(){
+       
+        $category=Category::select()->orderBy('id')->get();
+        return view('admins.allcategory',compact('category'));
+    }
+
+    public function createCategory(){
+        return view('admins.createcategory');
+    }
+
+    public function storeCategory(Request $request){
+
+        $category=Category::create([
+            "name"=>$request->name,
+            
+            
+        ]);
+
+        if($category){
+            return redirect()->route('admins.all.category');
+           }
+
+        
+    }
+
+    public function deleteCategory($id){
+        $category=Category::find($id);
+        $category->delete();
+        if($category){
+            return redirect()->route('admins.all.category');
+           }
+    }
+    public function editCategory($id)
+{
+    $category = Category::findOrFail($id);
+    $subcategories = Subcatgory::all();
+
+    return view('admins.editcategory', compact('category','subcategories'));
+}
+
+public function updateCategory(Request $request, $id)
+{
+    // Validation logic here
+
+    $category = Category::findOrFail($id);
+
+    $category->update([
+        'name' => $request->input('name'),
+        // Add other fields as needed
+    ]);
+
+    return redirect()->route('admins.all.category');
+}
+
+
+public function allsubcategory(){
+       
+    $subcategory=Subcatgory::select()->orderBy('id')->get();
+    return view('admins.allsubcategory',compact('subcategory'));
+}
+
+
+public function createSubcategory(){
+    $categories = Category::all();
+    return view('admins.createsubcategory',compact('categories'));
+}
+
+
+public function storeSubcategory(Request $request){
+
+    $subcategory=Subcatgory::create([
+        "name"=>$request->name,
+        "category_id"=>$request->category_id,
+        
+    ]);
+
+    if($subcategory){
+        return redirect()->route('admins.all.subcategory');
+       }
+
+    
+}
+
+public function deleteSubcategory($id){
+    $subcategory=Subcatgory::find($id);
+    $subcategory->delete();
+    if($subcategory){
+        return redirect()->route('admins.all.subcategory');
+       }
+}
+
+public function editSubcategory($id){
+    $categories = Category::all();
+    $subcategory = Subcatgory::findOrFail($id);
+
+
+return view('admins.editsubcategory', compact('subcategory', 'categories'));
+}
+
+public function updateSubcategory(Request $request, $id)
+{
+    // Validation logic here
+
+    $subcategory = Subcatgory::findOrFail($id);
+
+    $subcategory->update([
+        'name' => $request->input('name'),
+        'category_id' => $request->input('category_id'),
+        // Add other fields as needed
+    ]);
+
+    return redirect()->route('admins.all.subcategory');
+}
+
+public function getSubcategories($category)
+{
+    $subcategories = Subcatgory::where('category_id', $category)->get();
+    
+    return response()->json($subcategories);
+}
 
 }

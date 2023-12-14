@@ -37,18 +37,33 @@
               <input type="file" name="image" id="form2Example1" class="form-control"  />
              
             </div>
-            <div class="form-group">
+            <div >
               <label for="exampleFormControlTextarea1">Description</label>
-              <textarea name="descrption" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              <textarea name="description" class="form-control" id="description" rows="3"></textarea>
             </div>
            
+            <br>
             <div class="form-outline mb-4 mt-4">
+              <label for="category">Category:</label>
+              <select name="category_id" id="category_id" class="form-select  form-control" aria-label="Default select example">
+                <option value="" selected>None</option>
+                @foreach($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+                
+              </select>
+            </div>
 
-              <select name="category" class="form-select  form-control" aria-label="Default select example">
-                <option selected>Choose category</option>
-                <option value="Breakfast">Breakfast</option>
-                <option value="Launch">Launch</option>
-                <option value="Dinner">Dinner</option>
+            <div class="form-outline mb-4 mt-4">
+              <label for="subcategory" id="subcategory-label" style="display: none;">Subcategory:</label>
+              <select style="display: none" name="subcategory_id" id="subcategory_id" class="form-select  form-control" aria-label="Default select example">
+                
+               {{--  @foreach($subcategories as $subcategory)
+                
+                <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+               
+            @endforeach --}}
+                
               </select>
             </div>
 
@@ -67,5 +82,36 @@
     </div>
   </div>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // When the category dropdown changes
+        $('#category_id').change(function() {
+            // Get the selected category value
+            var categoryId = $(this).val();
+
+            // Toggle the visibility of the subcategory dropdown based on the selected category
+            if (categoryId !== '') {
+                $('#subcategory-label, #subcategory_id').show();
+
+                 // Make an AJAX request to fetch subcategories for the selected category
+            $.get('/admin/get-subcategories/' + categoryId, function(data) {
+                // Clear existing subcategory options
+                $('#subcategory_id').empty();
+
+                // Populate the subcategory dropdown with the fetched data
+                $.each(data, function(index, subcategory) {
+                        $('#subcategory_id').append('<option value="' + subcategory.id + '">' + subcategory.name  + '</option>');
+                    });
+            });
+
+            } else {
+                $('#subcategory-label, #subcategory_id').hide();
+            }
+
+           
+        });
+    });
+</script>
 
   @endsection

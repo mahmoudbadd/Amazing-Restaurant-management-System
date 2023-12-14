@@ -26,13 +26,13 @@ class HomeController extends Controller
     public function index()
     {
         $breakFastFoods=Food::select()->take(4)
-        ->where('category','breakfast')->orderBy('id','desc')->get();
+        ->where('category_id',2)->orderBy('id','desc')->get();
 
         $launchFoods=Food::select()->take(4)
-        ->where('category','Launch')->orderBy('id','desc')->get();
+        ->where('category_id',6)->orderBy('id','desc')->get();
 
         $DinnerFoods=Food::select()->take(4)
-        ->where('category','Dinner')->orderBy('id','desc')->get();
+        ->where('category_id',8)->orderBy('id','desc')->get();
 
         $reviews=Review::select()->take(4)
         ->orderBy('id','desc')->get();
